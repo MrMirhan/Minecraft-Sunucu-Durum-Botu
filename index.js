@@ -9,8 +9,13 @@ client.on('ready', () => {
         var channel = client.channels.find(c => c.id === "KANAL ID")
         request(`https://mcapi.xdefcon.com/server/SUNUCU IP ADRESI/full/json`, function (error, response, body) {
             body = JSON.parse(body);
-            channel.setName(`Oyuncular: ${body.players} / ${body.maxplayers}`);
-            client.user.setGame(`Oyuncular: ${body.players} / ${body.maxplayers}`)
+            if(body.serverStatus === "online"){
+                channel.setName(`Oyuncular: ${body.players} / ${body.maxplayers}`);
+                client.user.setGame(`Oyuncular: ${body.players} / ${body.maxplayers}`)
+            } else {
+                channel.setName("SUNUCU OFFLINE");
+                client.user.setGame("SUNUCU OFFLINE");
+            }
         })
     }, 2 * 1500);
 
@@ -97,5 +102,6 @@ client.on("message", message => {
     
   }
 })
+
 
 client.login("TOKEN");
