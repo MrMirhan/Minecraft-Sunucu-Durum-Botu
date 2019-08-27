@@ -42,8 +42,15 @@ client.on("message", message => {
             .setFooter("Minecraft Sunucu Durumu", `https://eu.mc-api.net/v3/server/favicon/${ip}`)
 
         return message.channel.send(embed).then(msg =>{
+            let mesicid = msg.id;
             var interval = setInterval (function () {
+                if(msg.id !== mesicid) {
+                    clearInterval(interval);
+                    return console.log("Eski mesaj yok, durdum.");
+                }
+                
                 msg.delete(1000)
+                
                 request(`https://mcapi.xdefcon.com/server/${ip}/full/json`, function (error, response, body) {
                     if (error) return console.error(error);
                     
@@ -64,7 +71,13 @@ client.on("message", message => {
                             .setFooter("Minecraft Sunucu Durumu", `https://eu.mc-api.net/v3/server/favicon/${ip}`)
 
                         return msg.channel.send(embed).then(mesic => {
+                            mesicid = mesic.id;
+                            if(mesic.id !== mesicid) {
+                                clearInterval(interval);
+                                return console.log("Eski mesaj yok, durdum.");
+                            }
                             mesic.delete(9999)
+                            
                         })
                     } else {
                         return msg.reply("Sunucu aktif değil.").then(messic => {
@@ -72,6 +85,7 @@ client.on("message", message => {
                         });
                     }
                 })
+                
             }, 10 * 1000); 
         })
       } else {
